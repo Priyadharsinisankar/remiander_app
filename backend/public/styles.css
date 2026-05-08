@@ -1,0 +1,272 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, Segoe UI, Arial, sans-serif;
+  background: #f5f7f4;
+  color: #17201c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, rgba(30, 128, 98, 0.12), transparent 32%),
+    linear-gradient(315deg, rgba(229, 169, 67, 0.16), transparent 34%),
+    #f5f7f4;
+}
+
+.app-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 32px auto;
+}
+
+.task-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 420px) minmax(320px, 1fr);
+  gap: 24px;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #dbe4df;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 18px 50px rgba(42, 59, 54, 0.08);
+}
+
+.auth-panel {
+  max-width: 520px;
+  margin: 8vh auto 0;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #397063;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: 1.45rem;
+}
+
+.subtle {
+  margin: 6px 0 0;
+  color: #66736f;
+  overflow-wrap: anywhere;
+}
+
+.status {
+  border-radius: 999px;
+  background: #eef3f1;
+  color: #4a5d58;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+
+.status.ok {
+  background: #dff4e8;
+  color: #1c6b45;
+}
+
+.status.error {
+  background: #fde6df;
+  color: #a23b25;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.tab {
+  background: #edf2f0;
+  color: #22312d;
+}
+
+.tab.active {
+  background: #27745f;
+  color: white;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-grid.compact {
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  color: #52615d;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #cbd7d3;
+  border-radius: 8px;
+  background: #fff;
+  color: #18211f;
+  font: inherit;
+  padding: 12px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.toggles label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #d8e2de;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #293633;
+}
+
+.toggles input {
+  width: auto;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  min-height: 44px;
+  padding: 0 16px;
+}
+
+.primary {
+  background: #27745f;
+  color: white;
+}
+
+.secondary {
+  background: #edf2f0;
+  color: #22312d;
+}
+
+.message {
+  min-height: 20px;
+  margin: 0;
+  color: #65736e;
+  font-size: 0.9rem;
+}
+
+.message.ok {
+  color: #1c6b45;
+}
+
+.message.error {
+  color: #a23b25;
+}
+
+.reminder-list {
+  display: grid;
+  gap: 12px;
+}
+
+.reminder-card {
+  display: grid;
+  gap: 10px;
+  border: 1px solid #dce5e1;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+}
+
+.reminder-card h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.reminder-card p {
+  margin: 8px 0 0;
+  color: #55645f;
+}
+
+.reminder-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #5a6b66;
+  font-size: 0.88rem;
+}
+
+.chip {
+  border-radius: 999px;
+  background: #f0f4f3;
+  padding: 6px 9px;
+}
+
+.empty {
+  color: #687a75;
+  padding: 24px 0;
+}
+
+@media (max-width: 820px) {
+  .app-shell {
+    margin: 16px auto;
+  }
+
+  .task-layout,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reminder App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="authPanel" class="panel auth-panel">
+        <div class="header-row">
+          <div>
+            <p class="eyebrow">Private task board</p>
+            <h1>Reminder App</h1>
+          </div>
+          <span id="apiStatus" class="status">Checking API</span>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Account action">
+          <button id="loginTab" class="tab active" type="button">Login</button>
+          <button id="signupTab" class="tab" type="button">Signup</button>
+        </div>
+
+        <form id="authForm" class="form-grid">
+          <label id="nameField" class="full hidden">
+            Name
+            <input id="authName" name="name" type="text" placeholder="Deepika" autocomplete="name" />
+          </label>
+
+          <label class="full">
+            Email
+            <input id="authEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+          </label>
+
+          <label class="full">
+            Password
+            <input id="authPassword" name="password" type="password" autocomplete="current-password" required />
+          </label>
+
+          <button id="authSubmit" type="submit" class="primary full">Login</button>
+          <p id="authMessage" class="message full"></p>
+        </form>
+      </section>
+
+      <section id="taskPanel" class="task-layout hidden">
+        <section class="panel">
+          <div class="header-row">
+            <div>
+              <p class="eyebrow">Signed in</p>
+              <h1 id="userName">My Tasks</h1>
+              <p id="userEmail" class="subtle"></p>
+            </div>
+            <button id="logoutBtn" class="secondary" type="button">Logout</button>
+          </div>
+
+          <form id="profileForm" class="form-grid compact">
+            <label class="full">
+              Telegram chat id
+              <input id="telegramChatId" name="telegram_chat_id" type="text" placeholder="Send /start to your bot" />
+            </label>
+            <button type="submit" class="secondary">Save Telegram</button>
+            <button id="testTelegramBtn" type="button" class="secondary">Test Telegram</button>
+            <p id="profileMessage" class="message full"></p>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="header-row">
+            <div>
+              <p class="eyebrow">Create</p>
+              <h2>New Task</h2>
+            </div>
+            <span id="telegramStatus" class="status">Telegram</span>
+          </div>
+
+          <form id="reminderForm" class="form-grid">
+            <label class="full">
+              Task title
+              <input id="title" name="title" type="text" placeholder="Study DBMS" required />
+            </label>
+
+            <label>
+              Date and time
+              <input id="start_time" name="start_time" type="datetime-local" required />
+            </label>
+
+            <label>
+              Remind before
+              <input id="remind_before_minutes" name="remind_before_minutes" type="number" min="0" value="30" />
+            </label>
+
+            <label class="full">
+              Description
+              <textarea id="description" name="description" rows="3" placeholder="What should I remember?"></textarea>
+            </label>
+
+            <div class="toggles full">
+              <label><input id="send_telegram" type="checkbox" checked /> Telegram</label>
+              <label><input id="send_calendar" type="checkbox" /> Google Calendar</label>
+              <label><input id="send_email" type="checkbox" /> Email</label>
+            </div>
+
+            <button type="submit" class="primary full">Add task</button>
+            <p id="taskMessage" class="message full"></p>
+          </form>
+        </section>
+
+        <section class="panel full-width">
+          <div class="header-row">
+            <div>
+              <p class="eyebrow">Upcoming</p>
+              <h2>My Tasks</h2>
+            </div>
+            <button id="refreshBtn" class="secondary" type="button">Refresh</button>
+          </div>
+          <div id="reminders" class="reminder-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
