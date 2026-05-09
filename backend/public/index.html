@@ -51,6 +51,7 @@
               <h1 id="userName">My Tasks</h1>
               <p id="userEmail" class="subtle"></p>
             </div>
+            <a href="chatbot.html" class="primary btn-link">Talk to AI Assistant</a>
             <button id="logoutBtn" class="secondary" type="button">Logout</button>
           </div>
 
@@ -61,7 +62,14 @@
             </label>
             <button type="submit" class="secondary">Save Telegram</button>
             <button id="testTelegramBtn" type="button" class="secondary">Test Telegram</button>
+            <button id="connectGoogleBtn" type="button" class="secondary">Connect Calendar</button>
+            <button id="disconnectGoogleBtn" type="button" class="secondary hidden">Disconnect Calendar</button>
+            <button id="connectMicrosoftBtn" type="button" class="secondary">Connect Outlook</button>
+            <button id="disconnectMicrosoftBtn" type="button" class="secondary hidden">Disconnect Outlook</button>
             <p id="profileMessage" class="message full"></p>
+            <p id="googleStatus" class="message full"></p>
+            <p id="microsoftStatus" class="message full"></p>
+            <div id="integrationStatus" class="integration-status full"></div>
           </form>
         </section>
 
@@ -75,6 +83,12 @@
           </div>
 
           <form id="reminderForm" class="form-grid">
+            <label class="full">
+              AI draft
+              <textarea id="aiPrompt" rows="2" placeholder="Example: remind me tomorrow at 9 AM to send the sprint update"></textarea>
+            </label>
+            <button id="draftWithAiBtn" type="button" class="secondary full">Draft with AI</button>
+
             <label class="full">
               Task title
               <input id="title" name="title" type="text" placeholder="Study DBMS" required />
@@ -90,6 +104,17 @@
               <input id="remind_before_minutes" name="remind_before_minutes" type="number" min="0" value="30" />
             </label>
 
+            <label>
+              Type
+              <select id="reminder_type" name="reminder_type">
+                <option value="task">Task</option>
+                <option value="meeting">Meeting</option>
+                <option value="deadline">Deadline</option>
+                <option value="birthday">Birthday</option>
+                <option value="event">Event</option>
+              </select>
+            </label>
+
             <label class="full">
               Description
               <textarea id="description" name="description" rows="3" placeholder="What should I remember?"></textarea>
@@ -98,6 +123,9 @@
             <div class="toggles full">
               <label><input id="send_telegram" type="checkbox" checked /> Telegram</label>
               <label><input id="send_calendar" type="checkbox" /> Google Calendar</label>
+              <label><input id="send_outlook" type="checkbox" /> Outlook Calendar</label>
+              <label><input id="send_linear" type="checkbox" /> Linear</label>
+              <label><input id="send_jira" type="checkbox" /> Jira</label>
               <label><input id="send_email" type="checkbox" /> Email</label>
             </div>
 

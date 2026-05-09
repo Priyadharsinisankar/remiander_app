@@ -178,7 +178,7 @@ textarea {
   width: auto;
 }
 
-button {
+button, .btn-link {
   border: 0;
   border-radius: 8px;
   cursor: pointer;
@@ -186,6 +186,16 @@ button {
   font-weight: 800;
   min-height: 44px;
   padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+button:hover, .btn-link:hover {
+  opacity: 0.9;
 }
 
 .primary {
@@ -249,6 +259,37 @@ button {
   border-radius: 999px;
   background: #f0f4f3;
   padding: 6px 9px;
+}
+
+.link-chip {
+  color: #1d6651;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.integration-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.integration-pill {
+  border-radius: 999px;
+  background: #f0f4f3;
+  color: #4f625d;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 7px 10px;
+}
+
+.integration-pill.ok {
+  background: #dff4e8;
+  color: #1c6b45;
+}
+
+.integration-pill.warn {
+  background: #fff2d8;
+  color: #795315;
 }
 
 .empty {

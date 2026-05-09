@@ -1,75 +1,102 @@
-# Reminder App
+# AI Reminder App - Backend
 
-Simple Express + PostgreSQL reminder app with login/signup, private task lists, and Telegram Bot API messaging.
+A powerful, AI-integrated reminder application built with Express and PostgreSQL. It supports Telegram notifications, Google Calendar sync, Microsoft Outlook sync, and issue creation in Jira and Linear.
+
+## Features
+
+- **Natural Language Parsing**: Draft reminders by simply typing text (powered by NVIDIA AI).
+- **AI Schedule Assistant**: A built-in chatbot that understands your schedule and helps you plan.
+- **Multi-Platform Sync**:
+  - **Google Calendar**: Full event sync (Create/Update/Delete).
+  - **Microsoft Outlook**: Native Outlook Calendar integration.
+  - **Jira**: Create and manage Atlassian issues from your reminders.
+  - **Linear**: Seamlessly sync tasks with your Linear teams.
+- **Telegram Native**: Bot integration for instant notifications and reminders.
+- **Smart Scheduler**: Automatically checks for due reminders and dispatches notifications.
+
+## Prerequisites
+
+- Node.js v18+
+- PostgreSQL
+- External API Keys (Optional but recommended for full features):
+  - NVIDIA API Key
+  - Telegram Bot Token
+  - Google Cloud Console Project (for Calendar)
+  - Microsoft Entra ID App (for Outlook)
+  - Jira API Token & Linear API Key
 
 ## Setup
 
-1. Create a PostgreSQL database.
+1. **Database Setup**:
+   ```sql
+   CREATE DATABASE reminder_app;
+   psql -d reminder_app -f database.sql
+   ```
 
-```sql
-CREATE DATABASE reminder_app;
-```
+2. **Environment Variables**:
+   Copy `.env.example` to `.env` and fill in your credentials.
 
-2. Run the schema.
+   ```env
+   DATABASE_URL=postgresql://user:pass@localhost:5432/reminder_app
+   PORT=3000
+   
+   # AI
+   NVIDIA_API_KEY=your_key
+   NVIDIA_MODEL=meta/llama-3.1-70b-instruct
+   
+   # Integrations
+   TELEGRAM_BOT_TOKEN=...
+   JIRA_API_TOKEN=...
+   JIRA_BASE_URL=https://your-site.atlassian.net
+   LINEAR_PERSONAL_API_KEY=...
+   LINEAR_TEAM_ID=...
+   
+   # OAuth
+   GOOGLE_CLIENT_ID=...
+   GOOGLE_CLIENT_SECRET=...
+   MS_CLIENT_ID=...
+   MS_CLIENT_SECRET=...
+   MS_TENANT_ID=common
+   ```
 
-```bash
-psql -U postgres -d reminder_app -f database.sql
-```
+3. **Install & Run**:
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-3. Create `.env` from `.env.example` and update `DATABASE_URL` plus your bot token.
+## API Reference
 
-```bash
-cp .env.example .env
-```
+### Reminders
+- `GET /api/reminders`: List all reminders for the user.
+- `POST /api/reminders`: Create a new reminder.
+- `PATCH /api/reminders/:id`: Update an existing reminder (syncs with external services).
+- `DELETE /api/reminders/:id`: Delete a reminder (cleans up external resources).
 
-```env
-TELEGRAM_BOT_TOKEN=123456:your_bot_token
-```
+### AI Assistant
+- `POST /api/ai/reminder-draft`: Convert raw text into a reminder object.
+- `GET /api/ai/chat`: Retrieve chat history.
+- `POST /api/ai/chat`: Talk to the AI assistant about your schedule.
 
-4. Install dependencies and start the server.
+### Integrations
+- `GET /api/integrations/status`: Check which services are configured and connected.
+- `GET /api/google/auth-url`: Get Google Calendar OAuth URL.
+- `GET /api/microsoft/auth-url`: Get Microsoft Outlook OAuth URL.
+- `POST /api/telegram/test`: Send a test notification to your Telegram bot.
 
-```bash
-npm install
-npm run dev
-```
+## Sync Logic
 
-Open `http://localhost:3000`.
+The backend implements a "Full Sync" lifecycle:
+- **Creation**: When `send_calendar` (or other flags) is true, an event/issue is created immediately.
+- **Update**: Changing title/time in the app updates the external resource.
+- **Deletion**: Deleting in the app removes the external resource.
+- **Toggling**: Enabling an integration on an existing reminder will create the external resource on the fly.
 
-## Telegram
+## Development
 
-1. Create a bot with BotFather and put the token in `.env` as `TELEGRAM_BOT_TOKEN`.
-2. Start the app, create an account, then send `/start` to your Telegram bot.
-3. The bot replies with your chat id. Paste that chat id into the app and click `Save Telegram`.
-4. Click `Test Telegram`. New tasks with Telegram enabled will be checked automatically by the scheduler.
+- `npm run dev`: Start server with nodemon.
+- `npm start`: Production start.
+- `scripts/`: Contains maintenance and migration scripts.
 
-The reminder scheduler starts with the server and checks pending Telegram tasks every 30 seconds by default. Change this in `.env`:
-
-```env
-REMINDER_POLL_SECONDS=30
-```
-
-To receive Telegram webhook messages locally, expose the app with a public HTTPS URL such as ngrok and set:
-
-```bash
-curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://your-public-url/api/telegram/webhook"
-```
-
-## API
-
-- `GET /api/health`
-- `POST /api/users/signup`
-- `POST /api/users/login`
-- `POST /api/users/logout`
-- `GET /api/users/me`
-- `PATCH /api/users/me`
-- `GET /api/reminders` authenticated
-- `GET /api/reminders/:id` authenticated
-- `POST /api/reminders` authenticated
-- `PATCH /api/reminders/:id` authenticated
-- `DELETE /api/reminders/:id` authenticated
-- `GET /api/reminders/due/pending`
-- `GET /api/reminders/scheduler/status` authenticated
-- `POST /api/reminders/scheduler/run` authenticated
-- `GET /api/telegram/status`
-- `POST /api/telegram/test` authenticated
-- `POST /api/telegram/webhook`
+---
+Built with ❤️ for productivity.

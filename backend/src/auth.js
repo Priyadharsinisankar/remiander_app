@@ -44,7 +44,9 @@ async function requireAuth(req, res, next) {
     }
 
     const result = await db.query(
-      `SELECT id, name, email, telegram_chat_id
+      `SELECT id, name, email, telegram_chat_id,
+              google_refresh_token, google_calendar_email,
+              microsoft_refresh_token, microsoft_calendar_email
        FROM users
        WHERE auth_token = $1`,
       [token]

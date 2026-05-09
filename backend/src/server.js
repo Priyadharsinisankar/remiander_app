@@ -5,6 +5,10 @@ require('dotenv').config();
 const usersRouter = require('./routes/users');
 const remindersRouter = require('./routes/reminders');
 const telegramRouter = require('./routes/telegram');
+const googleRouter = require('./routes/google');
+const microsoftRouter = require('./routes/microsoft');
+const integrationsRouter = require('./routes/integrations');
+const aiRouter = require('./routes/ai');
 const db = require('./db');
 const { startReminderScheduler } = require('./scheduler');
 
@@ -22,6 +26,10 @@ app.get('/api/health', (req, res) => {
 app.use('/api/users', usersRouter);
 app.use('/api/reminders', remindersRouter);
 app.use('/api/telegram', telegramRouter);
+app.use('/api/google', googleRouter);
+app.use('/api/microsoft', microsoftRouter);
+app.use('/api/integrations', integrationsRouter);
+app.use('/api/ai', aiRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);

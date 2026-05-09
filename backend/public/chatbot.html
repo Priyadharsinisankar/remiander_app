@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Schedule Assistant</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .chat-shell {
+        max-width: 800px;
+        margin: 40px auto;
+        display: flex;
+        flex-direction: column;
+        height: 80vh;
+      }
+      .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background: var(--bg-panel);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .msg {
+        max-width: 80%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        line-height: 1.5;
+        font-size: 0.95rem;
+      }
+      .msg.user {
+        align-self: flex-end;
+        background: var(--primary);
+        color: white;
+        border-bottom-right-radius: 2px;
+      }
+      .msg.assistant {
+        align-self: flex-start;
+        background: var(--bg-app);
+        border: 1px solid var(--border);
+        border-bottom-left-radius: 2px;
+      }
+      .chat-input-row {
+        display: flex;
+        gap: 12px;
+      }
+      .chat-input-row input {
+        flex: 1;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--bg-panel);
+        color: var(--text);
+      }
+      .back-link {
+        margin-bottom: 20px;
+        display: inline-block;
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .typing {
+        font-style: italic;
+        color: var(--text-subtle);
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="chat-shell">
+      <a href="index.html" class="back-link">← Back to Tasks</a>
+      
+      <div class="header-row">
+        <div>
+          <p class="eyebrow">NVIDIA AI Powered</p>
+          <h1>Schedule Assistant</h1>
+        </div>
+      </div>
+
+      <div id="chatMessages" class="chat-messages">
+        <div class="msg assistant">Hello! I'm your AI schedule assistant. Ask me anything about your upcoming tasks or help with planning your day.</div>
+      </div>
+
+      <form id="chatForm" class="chat-input-row">
+        <input id="chatInput" type="text" placeholder="How does my schedule look today?" autocomplete="off" required />
+        <button type="submit" class="primary">Send</button>
+      </form>
+    </main>
+
+    <script>
+      const chatMessages = document.querySelector('#chatMessages');
+      const chatForm = document.querySelector('#chatForm');
+      const chatInput = document.querySelector('#chatInput');
+
+      function getToken() {
+        return localStorage.getItem('reminder_token');
+      }
+
+      async function api(path, options = {}) {
+        const token = getToken();
+        const response = await fetch(`/api${path}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            ...(options.headers || {}),
+          },
+          ...options,
+        });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: 'Request failed' }));
+          throw new Error(error.error || 'Request failed');
+        }
+
+        return response.json();
+      }
+
+      function addMessage(role, content) {
+        const msg = document.createElement('div');
+        msg.className = `msg ${role}`;
+        msg.textContent = content;
+        chatMessages.appendChild(msg);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      async function loadHistory() {
+        try {
+          const { history } = await api('/ai/chat');
+          if (history.length > 0) {
+            chatMessages.innerHTML = '';
+            history.forEach(m => addMessage(m.role, m.content));
+          }
+        } catch (err) {
+          console.error('Failed to load history:', err);
+        }
+      }
+
+      chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        addMessage('user', message);
+        chatInput.value = '';
+
+        const typing = document.createElement('div');
+        typing.className = 'msg assistant typing';
+        typing.textContent = 'Thinking...';
+        chatMessages.appendChild(typing);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+          const { response } = await api('/ai/chat', {
+            method: 'POST',
+            body: JSON.stringify({ message })
+          });
+          typing.remove();
+          addMessage('assistant', response);
+        } catch (err) {
+          typing.textContent = 'Error: ' + err.message;
+          typing.classList.remove('typing');
+        }
+      });
+
+      if (!getToken()) {
+        window.location.href = 'index.html';
+      } else {
+        loadHistory();
+      }
+    </script>
+  </body>
+</html>

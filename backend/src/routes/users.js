@@ -17,6 +17,10 @@ function publicUser(user, token) {
       name: user.name,
       email: user.email,
       telegram_chat_id: user.telegram_chat_id,
+      google_calendar_connected: Boolean(user.google_refresh_token),
+      google_calendar_email: user.google_calendar_email,
+      microsoft_calendar_connected: Boolean(user.microsoft_refresh_token),
+      microsoft_calendar_email: user.microsoft_calendar_email,
     },
   };
 }
@@ -37,7 +41,9 @@ router.post('/signup', async (req, res, next) => {
     const result = await db.query(
       `INSERT INTO users (name, email, password_hash, auth_token, telegram_chat_id)
        VALUES ($1, LOWER($2), $3, $4, $5)
-       RETURNING id, name, email, telegram_chat_id`,
+       RETURNING id, name, email, telegram_chat_id,
+                 google_refresh_token, google_calendar_email,
+                 microsoft_refresh_token, microsoft_calendar_email`,
       [name, email, hashPassword(password), token, telegram_chat_id || null]
     );
 
@@ -70,7 +76,9 @@ router.post('/login', async (req, res, next) => {
       `UPDATE users
        SET auth_token = $1
        WHERE id = $2
-       RETURNING id, name, email, telegram_chat_id`,
+       RETURNING id, name, email, telegram_chat_id,
+                 google_refresh_token, google_calendar_email,
+                 microsoft_refresh_token, microsoft_calendar_email`,
       [token, existing.rows[0].id]
     );
 
@@ -90,7 +98,18 @@ router.post('/logout', requireAuth, async (req, res, next) => {
 });
 
 router.get('/me', requireAuth, (req, res) => {
-  res.json({ user: req.user });
+  res.json({
+    user: {
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+      telegram_chat_id: req.user.telegram_chat_id,
+      google_calendar_connected: Boolean(req.user.google_refresh_token),
+      google_calendar_email: req.user.google_calendar_email,
+      microsoft_calendar_connected: Boolean(req.user.microsoft_refresh_token),
+      microsoft_calendar_email: req.user.microsoft_calendar_email,
+    },
+  });
 });
 
 router.patch('/me', requireAuth, async (req, res, next) => {
@@ -102,7 +121,9 @@ router.patch('/me', requireAuth, async (req, res, next) => {
        SET name = COALESCE($1, name),
            telegram_chat_id = COALESCE($2, telegram_chat_id)
        WHERE id = $3
-       RETURNING id, name, email, telegram_chat_id`,
+       RETURNING id, name, email, telegram_chat_id,
+                 google_refresh_token, google_calendar_email,
+                 microsoft_refresh_token, microsoft_calendar_email`,
       [name || null, telegram_chat_id || null, req.user.id]
     );
 
